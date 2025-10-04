@@ -1,0 +1,86 @@
+:root {
+  /* Typography & rendering */
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Coastal Vibes palette */
+  --coastal-navy: #293241;  /* deep background */
+  --coastal-slate: #3d5a80; /* brand */
+  --coastal-sky: #98c1d9;   /* accents */
+  --coastal-foam: #e0fbfc;  /* surface */
+  --coastal-coral: #ee6c4d; /* call-to-action */
+
+  /* Semantic tokens */
+  --bg: var(--coastal-navy);
+  --surface: rgba(255,255,255,.05);
+  --text: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.65);
+  --brand: var(--coastal-slate);
+  --accent: var(--coastal-sky);
+  --cta: var(--coastal-coral);
+  --ring: rgba(152, 193, 217, .45);
+
+  color-scheme: dark;
+  color: var(--text);
+  background-color: var(--bg);
+}
+
+a {
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: inherit;
+}
+a:hover {
+  color: color-mix(in oklab, var(--accent) 80%, white);
+}
+
+body {
+  margin: 0;
+  display: block;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: var(--accent);
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto var(--ring);
+}
+
+/* Optional light theme (uncomment to enable toggle later)
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7fbfe;
+    --text: #1f2937;
+    --muted: #4b5563;
+    color-scheme: light;
+    background-color: var(--bg);
+    color: var(--text);
+  }
+}
+*/
+
+html { scroll-behavior: smooth; }
