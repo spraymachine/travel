@@ -5,6 +5,10 @@ import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
 import Services from './pages/Services.jsx'
 import Packages from './pages/Packages.jsx'
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
 function App() {
   const [active, setActive] = useState('home')
@@ -47,34 +51,36 @@ function App() {
   }, [])
 
   return (
-    <div className="app-container">
-      <Navbar active={active} />
-      <main className="content single">
-        <section id="home" data-section="home" className="reveal">
-          <Home />
-        </section>
-        <section id="packages" data-section="packages" className="reveal">
-          <Packages />
-        </section>
-        <section id="about" data-section="about" className="reveal">
-          <About />
-        </section>
-        <section id="services" data-section="services" className="reveal">
-          <Services />
-        </section>
-      </main>
-      <button
-        ref={topButtonRef}
-        className="scroll-top"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        aria-label="Scroll to top"
-      >
-        ↑
-      </button>
-      <footer className="site-footer">
-        <p>© {new Date().getFullYear()} NordLoom Travel • Tallinn, Estonia</p>
-      </footer>
-    </div>
+    <Elements stripe={stripePromise}>
+      <div className="app-container">
+        <Navbar active={active} />
+        <main className="content single">
+          <section id="home" data-section="home" className="reveal">
+            <Home />
+          </section>
+          <section id="packages" data-section="packages" className="reveal">
+            <Packages />
+          </section>
+          <section id="about" data-section="about" className="reveal">
+            <About />
+          </section>
+          <section id="services" data-section="services" className="reveal">
+            <Services />
+          </section>
+        </main>
+        <button
+          ref={topButtonRef}
+          className="scroll-top"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Scroll to top"
+        >
+          ↑
+        </button>
+        <footer className="site-footer">
+          <p>© {new Date().getFullYear()} NordLoom Travel • Tallinn, Estonia</p>
+        </footer>
+      </div>
+    </Elements>
   )
 }
 
