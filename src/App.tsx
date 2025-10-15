@@ -1,8 +1,15 @@
-import { BrowserRouter, Routes, Route, NavLink, useSearchParams } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Routes, Route, NavLink, useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import heroImg from './assets/hero.png'
 import heroVid from './assets/hero-vid.mp4'
 import './App.css'
+
+const RouterComponent = import.meta.env.PROD ? HashRouter : BrowserRouter
+
+function scrollToId(id: string) {
+  const el = document.getElementById(id)
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 
 function Navbar() {
   const [open, setOpen] = useState(false)
@@ -17,8 +24,8 @@ function Navbar() {
           </div>
           <div className="nav-center" style={{ flex:1, display:'flex', justifyContent:'center', gap: 28 }}>
             <NavLink to="/" onClick={closeMenu} style={({isActive})=>({ color: isActive ? 'var(--primary-600)' : 'var(--text)', fontWeight:600 })}>Home</NavLink>
-            <a href="#about" onClick={closeMenu} style={{ color:'var(--text)', fontWeight:600 }}>About</a>
-            <a href="#deals" onClick={closeMenu} style={{ color:'var(--text)', fontWeight:600 }}>Deals</a>
+            <button onClick={()=>{ closeMenu(); scrollToId('about') }} style={{ background:'transparent', border:'none', color:'var(--text)', fontWeight:600, cursor:'pointer' }}>About</button>
+            <button onClick={()=>{ closeMenu(); scrollToId('deals') }} style={{ background:'transparent', border:'none', color:'var(--text)', fontWeight:600, cursor:'pointer' }}>Deals</button>
           </div>
           <div className="nav-actions" style={{ display:'flex', alignItems:'center', gap:12 }}>
             <button style={{ background:'#f4f6ff', color:'var(--text)', border:'1px solid rgba(15,27,45,0.08)', padding:'10px 14px', borderRadius:999, fontWeight:600 }}>Login</button>
@@ -29,8 +36,8 @@ function Navbar() {
           </button>
           {open && (
             <div className="nav-mobile" style={{ position:'absolute', left:12, right:12, top:'100%', marginTop:10, background:'#ffffff', border:'1px solid rgba(15,27,45,0.08)', borderRadius:16, boxShadow:'0 12px 28px rgba(15,27,45,0.12)', padding:12, display:'grid', gap:10, textAlign:'center', justifyItems:'center' }}>
-              <a href="#about" onClick={closeMenu} style={{ color:'var(--text)', fontWeight:600 }}>About</a>
-              <a href="#deals" onClick={closeMenu} style={{ color:'var(--text)', fontWeight:600 }}>Deals</a>
+              <button onClick={()=>{ closeMenu(); scrollToId('about') }} style={{ background:'transparent', border:'none', color:'var(--text)', fontWeight:600, cursor:'pointer' }}>About</button>
+              <button onClick={()=>{ closeMenu(); scrollToId('deals') }} style={{ background:'transparent', border:'none', color:'var(--text)', fontWeight:600, cursor:'pointer' }}>Deals</button>
               <NavLink to="/" onClick={closeMenu} style={{ color:'var(--text)', fontWeight:600 }}>Home</NavLink>
               <div style={{ display:'grid', gap:8, marginTop:6, justifyItems:'center' }}>
                 <button style={{ background:'#f4f6ff', color:'var(--text)', border:'1px solid rgba(15,27,45,0.08)', padding:'10px 14px', borderRadius:10, fontWeight:600 }}>Login</button>
@@ -102,7 +109,18 @@ function AboutServices() {
           <p>Based in Tallinn, we design subtle, detail-forward trips across Estonia and the region. Our itineraries balance nature, culture, and slow travel.</p>
         </div>
         <div className="glass" style={{ borderRadius: 24, overflow:'hidden', marginBottom:24 }}>
-          <video src={heroVid} autoPlay muted loop playsInline onLoadedMetadata={(e)=>{ (e.currentTarget as HTMLVideoElement).playbackRate = 0.5 }} onPlay={(e)=>{ (e.currentTarget as HTMLVideoElement).playbackRate = 0.5 }} style={{ width:'100%', height: 340, objectFit:'cover', display:'block' }} />
+          <video
+            src={heroVid}
+            poster={heroImg}
+            preload="metadata"
+            autoPlay
+            muted
+            loop
+            playsInline
+            onLoadedMetadata={(e)=>{ (e.currentTarget as HTMLVideoElement).playbackRate = 0.5 }}
+            onPlay={(e)=>{ (e.currentTarget as HTMLVideoElement).playbackRate = 0.5 }}
+            style={{ width:'100%', height: 340, objectFit:'cover', display:'block', background:'#000' }}
+          />
         </div>
         <div className="grid grid-3" style={{ gap: 28 }}>
           <div style={{ background:'rgba(202,240,248,0.95)', border:'1px solid rgba(15,27,45,0.06)', borderRadius:28, padding:32, minHeight:220, boxShadow:'0 10px 30px rgba(15,27,45,0.12)' }}>
@@ -306,12 +324,12 @@ function HomePage() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <RouterComponent>
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
       </Routes>
       <Footer />
-    </BrowserRouter>
+    </RouterComponent>
   )
 }
