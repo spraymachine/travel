@@ -1,5 +1,38 @@
+function VideoBlock() {
+  const ref = useRef<HTMLVideoElement>(null)
+  useEffect(()=>{
+    const v = ref.current
+    if (!v) return
+    const onCanPlay = () => {
+      v.playbackRate = 0.5
+      const playPromise = v.play()
+      if (playPromise) playPromise.catch(()=>{})
+    }
+    v.addEventListener('canplay', onCanPlay)
+    v.addEventListener('loadedmetadata', onCanPlay)
+    onCanPlay()
+    return ()=>{
+      v.removeEventListener('canplay', onCanPlay)
+      v.removeEventListener('loadedmetadata', onCanPlay)
+    }
+  },[])
+  return (
+    <div className="glass" style={{ borderRadius: 24, overflow:'hidden', marginBottom:24 }}>
+      <video
+        ref={ref}
+        src={heroVid}
+        preload="auto"
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{ width:'100%', height: 340, objectFit:'cover', display:'block', background:'#000' }}
+      />
+    </div>
+  )
+}
 import { BrowserRouter, HashRouter, Routes, Route, NavLink, useSearchParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import heroImg from './assets/hero.png'
 import heroVid from './assets/hero-vid.mp4'
 import './App.css'
@@ -108,20 +141,7 @@ function AboutServices() {
           <h2 style={{ fontSize: 'clamp(1.5rem, 2.6vw, 2.25rem)' }}>We craft serene travel experiences</h2>
           <p>Based in Tallinn, we design subtle, detail-forward trips across Estonia and the region. Our itineraries balance nature, culture, and slow travel.</p>
         </div>
-        <div className="glass" style={{ borderRadius: 24, overflow:'hidden', marginBottom:24 }}>
-          <video
-            src={heroVid}
-            poster={heroImg}
-            preload="metadata"
-            autoPlay
-            muted
-            loop
-            playsInline
-            onLoadedMetadata={(e)=>{ (e.currentTarget as HTMLVideoElement).playbackRate = 0.5 }}
-            onPlay={(e)=>{ (e.currentTarget as HTMLVideoElement).playbackRate = 0.5 }}
-            style={{ width:'100%', height: 340, objectFit:'cover', display:'block', background:'#000' }}
-          />
-        </div>
+        <VideoBlock />
         <div className="grid grid-3" style={{ gap: 28 }}>
           <div style={{ background:'rgba(202,240,248,0.95)', border:'1px solid rgba(15,27,45,0.06)', borderRadius:28, padding:32, minHeight:220, boxShadow:'0 10px 30px rgba(15,27,45,0.12)' }}>
             <h3>City & Culture</h3>
