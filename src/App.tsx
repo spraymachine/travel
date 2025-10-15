@@ -66,7 +66,7 @@ function Hero() {
         <div className="hero-wrap" style={{
           background:'#caf0f8',
           borderRadius: 24,
-          padding: '52px 14px',
+          padding: '52px 24px',
           display:'grid',
           gap: 24,
           gridTemplateColumns:'1.15fr 1fr',
