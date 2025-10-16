@@ -1,4 +1,4 @@
-import { BrowserRouter, HashRouter, Routes, Route, NavLink, useSearchParams } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Routes, Route, useSearchParams, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import heroImg from './assets/hero.png'
 import heroVid from './assets/hero-vid.mp4'
@@ -14,6 +14,7 @@ function scrollToId(id: string) {
 function Navbar() {
   const [open, setOpen] = useState(false)
   const closeMenu = () => setOpen(false)
+  const navigate = useNavigate()
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 40, background: 'var(--bg)', padding: '16px 0' }}>
       <div className="container">
@@ -23,7 +24,7 @@ function Navbar() {
             <span style={{ fontFamily: 'Manrope', fontWeight: 800, letterSpacing: '-0.02em' }}>Plusreisid OÜ</span>
           </div>
           <div className="nav-center" style={{ flex:1, display:'flex', justifyContent:'center', gap: 28 }}>
-            <NavLink to="/" onClick={closeMenu} style={({isActive})=>({ color: isActive ? 'var(--primary-600)' : 'var(--text)', fontWeight:600 })}>Home</NavLink>
+            <button onClick={()=>{ closeMenu(); navigate('/') }} style={{ background:'transparent', border:'none', color:'var(--text)', fontWeight:600, cursor:'pointer' }}>Home</button>
             <button onClick={()=>{ closeMenu(); scrollToId('about') }} style={{ background:'transparent', border:'none', color:'var(--text)', fontWeight:600, cursor:'pointer' }}>About</button>
             <button onClick={()=>{ closeMenu(); scrollToId('deals') }} style={{ background:'transparent', border:'none', color:'var(--text)', fontWeight:600, cursor:'pointer' }}>Deals</button>
           </div>
@@ -38,7 +39,7 @@ function Navbar() {
             <div className="nav-mobile" style={{ position:'absolute', left:12, right:12, top:'100%', marginTop:10, background:'#ffffff', border:'1px solid rgba(15,27,45,0.08)', borderRadius:16, boxShadow:'0 12px 28px rgba(15,27,45,0.12)', padding:12, display:'grid', gap:10, textAlign:'center', justifyItems:'center' }}>
               <button onClick={()=>{ closeMenu(); scrollToId('about') }} style={{ background:'transparent', border:'none', color:'var(--text)', fontWeight:600, cursor:'pointer' }}>About</button>
               <button onClick={()=>{ closeMenu(); scrollToId('deals') }} style={{ background:'transparent', border:'none', color:'var(--text)', fontWeight:600, cursor:'pointer' }}>Deals</button>
-              <NavLink to="/" onClick={closeMenu} style={{ color:'var(--text)', fontWeight:600 }}>Home</NavLink>
+              <button onClick={()=>{ closeMenu(); navigate('/') }} style={{ background:'transparent', border:'none', color:'var(--text)', fontWeight:600, cursor:'pointer' }}>Home</button>
               <div style={{ display:'grid', gap:8, marginTop:6, justifyItems:'center' }}>
                 <button style={{ background:'#f4f6ff', color:'var(--text)', border:'1px solid rgba(15,27,45,0.08)', padding:'10px 14px', borderRadius:10, fontWeight:600 }}>Login</button>
                 <a href="#deals"><button style={{ background:'var(--text)', color:'#ffffff', border:'1px solid rgba(15,27,45,0.1)', padding:'10px 16px', borderRadius:10, fontWeight:700 }}>Start booking</button></a>
@@ -179,7 +180,7 @@ function Tag({ label, active, onToggle }: { label: string; active?: boolean; onT
     <button onClick={() => onToggle && onToggle(label)} style={{
       padding:'6px 10px', borderRadius:999, border: active ? '1px solid var(--primary)' : '1px solid rgba(15,27,45,0.08)',
       background: active ? 'linear-gradient(180deg,#e7f2ff,#ffffff)' : '#fff', color: active ? 'var(--primary-600)' : 'var(--text)', fontWeight:600,
-      whiteSpace:'nowrap', flex:'0 0 auto'
+      whiteSpace:'nowrap', flex:'0 0 auto', margin:'6px 6px'
     }}>{label}</button>
   )
 }
@@ -332,19 +333,11 @@ function DealsSection() {
                 ))}
               </div>
             ) : (
-              <div className="dest-row">
+              <div className="dest-row" style={{ padding:'6px 4px' }}>
                 {LOCATIONS.map(loc => (
-                  <details key={loc} className="dest" style={{ display:'inline-block', background:'#fff', border:'1px solid rgba(15,27,45,0.08)', borderRadius:12, padding:12 }}>
-                    <summary style={{ cursor:'pointer', listStyle:'none', outline:'none', fontWeight:700 }}>{loc}</summary>
-                    <div className="tags-row" style={{ marginTop:10 }}>
-                      {TAGS_BY_LOCATION[loc].map(t => (
-                        <Tag key={loc + '-' + t} label={t} active={activeTags.includes(t)} onToggle={(label)=>{
-                          const next = activeTags.includes(label) ? activeTags.filter(x=>x!==label) : [...activeTags, label]
-                          setParam('tags', next)
-                        }} />
-                      ))}
-                    </div>
-                  </details>
+                  <button key={loc} className="dest-button" onClick={()=> setParam('loc', loc)} style={{ display:'inline-flex', alignItems:'center', background:'#fff', border:'1px solid rgba(15,27,45,0.12)', borderRadius:12, padding:'12px 14px', fontWeight:700, color:'var(--text)' }}>
+                    {loc}
+                  </button>
                 ))}
               </div>
             )}

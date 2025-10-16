@@ -67,7 +67,7 @@ button:focus-visible { outline: none; box-shadow: var(--ring); }
 .grid { display:grid; gap: 24px; }
 .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
 .grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
-.tags-row { display:inline-flex; flex-wrap:nowrap; overflow-x:auto; gap:10px; padding-bottom:6px; scrollbar-width: none; max-width:100%; white-space:nowrap; }
+.tags-row { display:inline-flex; flex-wrap:nowrap; overflow-x:auto; gap:10px; padding:6px 4px; scrollbar-width: none; max-width:100%; white-space:nowrap; }
 .tags-row::-webkit-scrollbar { display:none; }
 .dest-row { display:flex; flex-wrap:nowrap; gap:12px; overflow-x:auto; }
 .dest-row .dest { flex: 0 0 auto; }
