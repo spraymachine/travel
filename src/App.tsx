@@ -1,5 +1,5 @@
 import { BrowserRouter, HashRouter, Routes, Route, useSearchParams, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import heroImg from './assets/hero.png'
 import heroVid from './assets/hero-vid.mp4'
 import './App.css'
@@ -108,6 +108,29 @@ function Hero() {
 }
 
 function AboutServices() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  useEffect(() => {
+    const el = videoRef.current
+    if (!el) return
+    // Ensure mobile inline autoplay compatibility
+    el.setAttribute('playsinline', '')
+    el.setAttribute('webkit-playsinline', '')
+    el.muted = true
+    el.defaultMuted = true
+    const tryPlay = () => { el.play().catch(() => {}) }
+    const onCanPlay = () => tryPlay()
+    el.addEventListener('canplay', onCanPlay)
+    tryPlay()
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) tryPlay()
+    }, { threshold: 0.4 })
+    observer.observe(el)
+    return () => {
+      el.removeEventListener('canplay', onCanPlay)
+      observer.disconnect()
+    }
+  }, [])
+
   return (
     <section id="about" className="section">
       <div className="container" style={{ position: 'relative' }}>
@@ -124,7 +147,7 @@ function AboutServices() {
             muted
             loop
             playsInline
-            poster={heroImg}
+            ref={videoRef}
             onLoadedData={(e)=> {
               const el = e.currentTarget
               // Attempt to start playback on load for devices that block autoplay until a frame is available
