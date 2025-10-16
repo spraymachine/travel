@@ -98,7 +98,7 @@ function Hero() {
               <a href="#about"><button style={{ background:'#fff' }}>About us</button></a>
             </div>
           </div>
-          <div className="hero-media" style={{ height:'70%', width:'100%', borderRadius: 20, overflow:'hidden', alignSelf:'stretch', justifySelf:'stretch', boxShadow:'0 12px 40px rgba(15,27,45,0.08)' }}>
+          <div className="hero-media" style={{ height:'70%', width:'100%', borderRadius: 20, overflow:'hidden', alignSelf:'center', justifySelf:'stretch', boxShadow:'0 12px 40px rgba(15,27,45,0.08)' }}>
             <img src={heroImg} alt="Plusreisid OÜ hero" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
           </div>
         </div>
@@ -124,8 +124,16 @@ function AboutServices() {
             muted
             loop
             playsInline
+            poster={heroImg}
+            onLoadedData={(e)=> {
+              const el = e.currentTarget
+              // Attempt to start playback on load for devices that block autoplay until a frame is available
+              el.play().catch(() => {/* no-op */})
+            }}
             style={{ width:'100%', height: 340, objectFit:'cover', display:'block', background:'#000' }}
-          />
+          >
+            <source src={heroVid} type="video/mp4" />
+          </video>
         </div>
         <div className="grid grid-3" style={{ gap: 28 }}>
           <div style={{ background:'rgba(202,240,248,0.95)', border:'1px solid rgba(15,27,45,0.06)', borderRadius:28, padding:32, minHeight:220, boxShadow:'0 10px 30px rgba(15,27,45,0.12)' }}>
