@@ -67,6 +67,28 @@ button:focus-visible { outline: none; box-shadow: var(--ring); }
 .grid { display:grid; gap: 24px; }
 .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
 .grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.tags-row { display:inline-flex; flex-wrap:nowrap; overflow-x:auto; gap:10px; padding-bottom:6px; scrollbar-width: none; max-width:100%; white-space:nowrap; }
+.tags-row::-webkit-scrollbar { display:none; }
+.dest-row { display:flex; flex-wrap:nowrap; gap:12px; overflow-x:auto; }
+.dest-row .dest { flex: 0 0 auto; }
+
+/* Deals section top shape divider */
+.custom-shape-divider-top-1760607620 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  pointer-events: none;
+}
+.custom-shape-divider-top-1760607620 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 400px;
+}
+.custom-shape-divider-top-1760607620 .shape-fill { fill: var(--bg); }
 
 /* Hero layout (desktop default) */
 .hero-wrap { grid-template-areas: 'text media'; }
@@ -118,4 +140,17 @@ button:focus-visible { outline: none; box-shadow: var(--ring); }
 
 @media (max-width: 480px) {
   button { padding: 0.6rem 0.9rem; border-radius: 10px; }
+}
+
+/* Dropdown look to match site schema */
+.deals-dest-select {
+  appearance: none;
+  background: #ffffff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%230f1b2d" viewBox="0 0 16 16"><path d="M3 6l5 5 5-5H3z"/></svg>') no-repeat right 12px center;
+  padding-right: 36px !important;
+}
+
+@media (max-width: 768px) {
+  .deals-filter-header { flex-direction: column; align-items: stretch; }
+  .deals-filter-header .subtle { margin-bottom: 6px; }
+  .deals-dest-select { width: 100%; }
 }

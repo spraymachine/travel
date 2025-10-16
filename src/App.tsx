@@ -171,26 +171,38 @@ type Deal = {
 }
 
 const ALL_DEALS: Deal[] = [
-  { id:'1', title:'Tallinn Weekend Escape', location:'Tallinn', price: 219, nights:2, tags:['city','culture','sauna'] },
-  { id:'2', title:'Lahemaa Bog & Forest Retreat', location:'Lahemaa', price: 349, nights:3, tags:['nature','hiking','wellness'] },
-  { id:'3', title:'Saaremaa Island Getaway', location:'Saaremaa', price: 399, nights:4, tags:['island','spa','coast'] },
-  { id:'4', title:'Tartu Culture & Science', location:'Tartu', price: 289, nights:2, tags:['city','museum','culture'] },
-  { id:'5', title:'Hiiumaa Lighthouse Trail', location:'Hiiumaa', price: 359, nights:3, tags:['island','coast','cycling'] },
-  { id:'6', title:'Pärnu Beach Holiday', location:'Pärnu', price: 279, nights:3, tags:['beach','family','coast'] },
-  { id:'7', title:'Lake Peipsi Fisherman’s Route', location:'Peipsi', price: 309, nights:3, tags:['lake','food','culture'] },
-  { id:'8', title:'Haapsalu Spa Weekend', location:'Haapsalu', price: 329, nights:3, tags:['spa','wellness','coast'] },
-  { id:'9', title:'Otepää Ski Break', location:'Otepää', price: 299, nights:3, tags:['ski','winter','nature'] },
-  { id:'10', title:'Soomaa Canoe Safari', location:'Soomaa', price: 349, nights:2, tags:['canoe','wildlife','nature'] },
-  { id:'11', title:'Narva Fortress & Old Town', location:'Narva', price: 269, nights:2, tags:['history','architecture','city'] },
-  { id:'12', title:'Muhu Manor & Design Stay', location:'Muhu', price: 389, nights:3, tags:['island','design','manor'] },
-  { id:'13', title:'Viljandi Folk Festival Weekend', location:'Viljandi', price: 319, nights:2, tags:['festival','music','culture'] },
+  // TÜRGI / Turkey
+  { id:'tr-1', title:'Riolavitas Spa and Resort', location:'Turkey', price: 1099, nights:7, tags:['turkey','türgi','spa','resort','beach'] },
+  { id:'tr-2', title:'Lake River Side Hotel', location:'Turkey', price: 899, nights:7, tags:['turkey','türgi','family','resort','beach'] },
+  { id:'tr-3', title:'Sorgun Akadia Hotel Luxury', location:'Turkey', price: 1299, nights:7, tags:['turkey','türgi','luxury','beach','spa'] },
+
+  // EGYPTUS / Egypt
+  { id:'eg-1', title:'Steigenberger Aqua Magic', location:'Egypt', price: 1199, nights:7, tags:['egypt','egyptus','aqua','family','resort'] },
+  { id:'eg-2', title:'Grand Waterworld Makadi', location:'Egypt', price: 1149, nights:7, tags:['egypt','egyptus','waterpark','resort','beach'] },
+  { id:'eg-3', title:'Sea Star Beau Rivage', location:'Egypt', price: 999, nights:7, tags:['egypt','egyptus','beach','resort','snorkeling'] },
+
+  // KREEKA / Greece
+  { id:'gr-1', title:'Ostria Resort and Spa 5*', location:'Greece', price: 1399, nights:7, tags:['greece','kreeka','spa','5-star','beach'] },
+  { id:'gr-2', title:'Mitsis Cretan Village Beach', location:'Greece', price: 1299, nights:7, tags:['greece','kreeka','family','beach','resort'] },
+  { id:'gr-3', title:'Mitsis Bali Paradise Hotel 4*', location:'Greece', price: 1099, nights:7, tags:['greece','kreeka','4-star','beach','relax'] },
+
+  // TENERIFE / Spain
+  { id:'tf-1', title:'GF Victoria', location:'Tenerife', price: 1599, nights:7, tags:['tenerife','spain','luxury','family','pool'] },
+  { id:'tf-2', title:'Jardin Tropical', location:'Tenerife', price: 1349, nights:7, tags:['tenerife','spain','tropical','beach','relax'] },
+  { id:'tf-3', title:'H10 Las Palmeras', location:'Tenerife', price: 1190, nights:7, tags:['tenerife','spain','h10','beach','resort'] },
+
+  // MONTENEGRO
+  { id:'me-1', title:'Splendid Conference 5*', location:'Montenegro', price: 1390, nights:7, tags:['montenegro','5-star','spa','conference','beach'] },
+  { id:'me-2', title:'Montenegrina Hotel & SPA 4*', location:'Montenegro', price: 990, nights:7, tags:['montenegro','4-star','spa','coast'] },
+  { id:'me-3', title:'Eurostars Q of Montenegro', location:'Montenegro', price: 1050, nights:7, tags:['montenegro','eurostars','city','comfort'] },
 ]
 
 function Tag({ label, active, onToggle }: { label: string; active?: boolean; onToggle?: (l: string) => void }) {
   return (
     <button onClick={() => onToggle && onToggle(label)} style={{
       padding:'6px 10px', borderRadius:999, border: active ? '1px solid var(--primary)' : '1px solid rgba(15,27,45,0.08)',
-      background: active ? 'linear-gradient(180deg,#e7f2ff,#ffffff)' : '#fff', color: active ? 'var(--primary-600)' : 'var(--text)', fontWeight:600
+      background: active ? 'linear-gradient(180deg,#e7f2ff,#ffffff)' : '#fff', color: active ? 'var(--primary-600)' : 'var(--text)', fontWeight:600,
+      whiteSpace:'nowrap', flex:'0 0 auto'
     }}>{label}</button>
   )
 }
@@ -229,8 +241,15 @@ function DealsSection() {
   const query = (searchParams.get('q') ?? '')
   const activeTags = (searchParams.get('tags') ?? '').split(',').filter(Boolean)
   const sort = searchParams.get('sort') ?? 'price-asc'
+  const selectedLoc = (searchParams.get('loc') ?? '')
 
-  const TAGS = Array.from(new Set(ALL_DEALS.flatMap(d=>d.tags)))
+  // const TAGS = Array.from(new Set(ALL_DEALS.flatMap(d=>d.tags)))
+  const LOCATIONS = Array.from(new Set(ALL_DEALS.map(d=>d.location)))
+  const TAGS_BY_LOCATION: Record<string, string[]> = LOCATIONS.reduce((acc, loc) => {
+    const tags = Array.from(new Set(ALL_DEALS.filter(d => d.location === loc).flatMap(d => d.tags)))
+    acc[loc] = tags
+    return acc
+  }, {} as Record<string, string[]>)
 
   const filtered = ALL_DEALS.filter(d => {
     const q = query.trim().toLowerCase()
@@ -252,26 +271,22 @@ function DealsSection() {
 
   const hasFilters = query.trim() !== '' || activeTags.length > 0 || sort !== 'price-asc'
 
-  const dividerBg = `url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100"><path d="M0 0v100S0 4 500 4s500 96 500 96V0H0Z" fill="#f7fbff"></path></svg>')}" )`
+  // shape divider removed
 
   return (
-    <section id="deals" className="section" style={{ background:'#caf0f8', paddingTop: 0 }}>
-      <div aria-hidden>
-        <div style={{
-          height: 90,
-          width: '100vw',
-          marginLeft: 'calc(50% - 50vw)',
-          backgroundImage: dividerBg,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: '100% 100%',
-          backgroundPosition: 'top center'
-        }} />
+    <section id="deals" className="section" style={{ background:'#caf0f8', padding: '60px 0', position:'relative' }}>
+      <div className="custom-shape-divider-top-1760607620" aria-hidden>
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <rect x="1200" height="3.6"></rect>
+          <rect height="3.6"></rect>
+          <path d="M0,0V3.6H580.08c11,0,19.92,5.09,19.92,13.2,0-8.14,8.88-13.2,19.92-13.2H1200V0Z" className="shape-fill"></path>
+        </svg>
       </div>
       <div className="container">
         <div style={{
           background:'#ffffff',
           borderRadius: 24,
-          padding: 24,
+          padding: '40px 24px 24px',
           display:'grid',
           gap: 24,
           boxShadow:'0 10px 30px rgba(15,27,45,0.08)',
@@ -312,14 +327,51 @@ function DealsSection() {
             </div>
           </div>
 
-          <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
-            {TAGS.map(t => (
-              <Tag key={t} label={t} active={activeTags.includes(t)} onToggle={(label)=>{
-                const next = activeTags.includes(label) ? activeTags.filter(x=>x!==label) : [...activeTags, label]
-                setParam('tags', next)
-              }} />
-            ))}
+        <div style={{ display:'grid', gap:12 }}>
+          <div className="deals-filter-header" style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, flexWrap:'wrap' }}>
+            <div className="subtle" style={{ fontWeight:700 }}>Filter by destination</div>
+            <select
+              className="deals-dest-select"
+              value={selectedLoc}
+              onChange={(e)=> setParam('loc', (e.target as HTMLSelectElement).value)}
+              aria-label="Select destination"
+              style={{ padding:'12px 14px', borderRadius:12, border:'1px solid rgba(15,27,45,0.12)', background:'#ffffff' }}
+            >
+              <option value="">All destinations</option>
+              {LOCATIONS.map(loc => (
+                <option key={loc} value={loc}>{loc}</option>
+              ))}
+            </select>
           </div>
+
+          {selectedLoc
+            ? (
+              <div className="tags-row" style={{ marginTop:4 }}>
+                {(TAGS_BY_LOCATION[selectedLoc] || []).map(t => (
+                  <Tag key={selectedLoc + '-' + t} label={t} active={activeTags.includes(t)} onToggle={(label)=>{
+                    const next = activeTags.includes(label) ? activeTags.filter(x=>x!==label) : [...activeTags, label]
+                    setParam('tags', next)
+                  }} />
+                ))}
+              </div>
+            ) : (
+              <div className="dest-row">
+                {LOCATIONS.map(loc => (
+                  <details key={loc} className="dest" style={{ display:'inline-block', background:'#fff', border:'1px solid rgba(15,27,45,0.08)', borderRadius:12, padding:12 }}>
+                    <summary style={{ cursor:'pointer', listStyle:'none', outline:'none', fontWeight:700 }}>{loc}</summary>
+                    <div className="tags-row" style={{ marginTop:10 }}>
+                      {TAGS_BY_LOCATION[loc].map(t => (
+                        <Tag key={loc + '-' + t} label={t} active={activeTags.includes(t)} onToggle={(label)=>{
+                          const next = activeTags.includes(label) ? activeTags.filter(x=>x!==label) : [...activeTags, label]
+                          setParam('tags', next)
+                        }} />
+                      ))}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            )}
+        </div>
 
           <div className="grid grid-3">
             {sorted.map(deal => (
