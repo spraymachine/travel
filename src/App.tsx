@@ -1,4 +1,4 @@
-import { BrowserRouter, HashRouter, Routes, Route, useSearchParams, useNavigate } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Routes, Route, useSearchParams, useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import heroImg from './assets/hero.png'
 import heroVid from './assets/hero-vid.mp4'
@@ -224,6 +224,7 @@ function Tag({ label, active, onToggle }: { label: string; active?: boolean; onT
 }
 
 function DealCard({ deal }: { deal: Deal }) {
+  const navigate = useNavigate()
   return (
     <div className="glass" style={{ borderRadius:16, overflow:'hidden' }}>
       <div style={{ padding:16 }}>
@@ -235,7 +236,7 @@ function DealCard({ deal }: { deal: Deal }) {
       </div>
       <div style={{ padding:16, display:'flex', justifyContent:'space-between', alignItems:'center', borderTop:'1px solid rgba(15,27,45,0.06)' }}>
         <span style={{ fontWeight:800 }}>€{deal.price}</span>
-        <button>View</button>
+        <button onClick={()=> navigate(`/deal/${deal.id}`)}>View</button>
       </div>
     </div>
   )
@@ -408,8 +409,105 @@ export default function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/deal/:id" element={<DealDetail />} />
       </Routes>
       <Footer />
     </RouterComponent>
+  )
+}
+
+function findDealById(id: string): Deal | undefined {
+  return ALL_DEALS.find(d => d.id === id)
+}
+
+function DealDetail() {
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const deal = findDealById(id || '')
+
+  if (!deal) {
+    return (
+      <main className="section">
+        <div className="container" style={{ textAlign:'center' }}>
+          <h2>Deal not found</h2>
+          <p className="subtle">The deal you’re looking for doesn’t exist.</p>
+          <div style={{ marginTop:16 }}>
+            <button onClick={()=> navigate('/')}>Back to home</button>
+          </div>
+        </div>
+      </main>
+    )
+  }
+
+  return (
+    <main className="section" style={{ paddingTop: 24 }}>
+      <div className="container">
+        <div className="glass" style={{ borderRadius: 24, overflow:'hidden', boxShadow:'0 12px 40px rgba(15,27,45,0.08)' }}>
+          <div className="detail-grid" style={{ display:'grid', gridTemplateColumns:'1.2fr 0.8fr', gap:24 }}>
+            <div style={{ padding:24 }}>
+              <div className="chip">{deal.location}</div>
+              <h1 style={{ fontSize:'clamp(1.6rem, 3.6vw, 2.6rem)' }}>{deal.title}</h1>
+              <p className="subtle" style={{ marginBottom: 10 }}>{deal.nights} nights • From €{deal.price}</p>
+
+              <div style={{ display:'flex', flexWrap:'wrap', gap:8, margin:'10px 0 18px' }}>
+                {deal.tags.map(t => (
+                  <span key={t} className="chip" style={{ background:'#eef6ff' }}>{t}</span>
+                ))}
+              </div>
+
+              <div style={{ display:'grid', gap:12 }}>
+                <h3>Overview</h3>
+                <p>Experience a balanced escape with culture, nature, and downtime. Comfortable stays, smooth transfers, and curated spots make this a relaxed and memorable trip.</p>
+
+                <h3>What’s included</h3>
+                <ul style={{ margin:0, paddingLeft: '1.2rem', color:'var(--muted)' }}>
+                  <li>Round-trip flights</li>
+                  <li>Hotel accommodation</li>
+                  <li>Breakfast daily</li>
+                  <li>Airport transfers</li>
+                  <li>Local support</li>
+                </ul>
+
+                <h3>Good to know</h3>
+                <ul style={{ margin:0, paddingLeft: '1.2rem', color:'var(--muted)' }}>
+                  <li>Flexible dates on request</li>
+                  <li>Upgrade options available</li>
+                  <li>Family-friendly options</li>
+                </ul>
+              </div>
+            </div>
+
+            <aside style={{ borderLeft:'1px solid rgba(15,27,45,0.06)', padding:24, display:'grid', gap:16 }}>
+              <div style={{ background:'#fff', border:'1px solid rgba(15,27,45,0.08)', borderRadius:16, padding:16 }}>
+                <div style={{ display:'flex', alignItems:'baseline', justifyContent:'space-between' }}>
+                  <div>
+                    <div className="subtle" style={{ fontWeight:700 }}>From</div>
+                    <div style={{ fontWeight:800, fontSize:24 }}>€{deal.price}</div>
+                  </div>
+                  <div className="subtle">{deal.nights} nights</div>
+                </div>
+                <div style={{ display:'grid', gap:10, marginTop:12 }}>
+                  <button onClick={()=> navigate('/#deals')}>Choose dates</button>
+                  <button style={{ background:'#0f1b2d', color:'#fff' }} onClick={()=> navigate('/#deals')}>Book now</button>
+                </div>
+              </div>
+
+              <div style={{ background:'#f0f6ff', border:'1px dashed rgba(15,27,45,0.2)', borderRadius:16, padding:16, height:240, display:'grid', placeItems:'center', color:'var(--muted)', textAlign:'center' }}>
+                <div>
+                  <div style={{ fontWeight:700 }}>Image placeholder</div>
+                  <div>Add a beautiful photo for this deal here later</div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .detail-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </main>
   )
 }
