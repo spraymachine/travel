@@ -55,13 +55,20 @@ function Navbar() {
 function Footer() {
   return (
     <footer style={{ marginTop: 64, padding:'32px 0', borderTop:'1px solid rgba(15,27,45,0.06)'}}>
-      <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-        <span className="subtle">© {new Date().getFullYear()} Plusreisid OÜ, Tallinn, Estonia</span>
-        <div style={{ display: 'flex', alignItems:'center', gap:12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><span className="fa fa-phone"></span> <span>+372 583 736 06</span></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><span className="fa fa-envelope"></span> <span>info@plusreisid.ee</span></div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><span className="fa fa-map-marker"></span> <span>Tallinn, Eesti</span></div>
+      <div className="container footer-grid">
+        <div className="footer-item">
+          <svg className="icon-24" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.2c1.2 2.4 3 4.3 5.4 5.4l1.8-1.8c.3-.3.8-.4 1.2-.3 1 .3 2 .4 3.1.4.5 0 .9.4.9.9v2.9c0 .5-.4.9-.9.9C10.7 18.6 5.4 13.3 5.4 6.9c0-.5.4-.9.9-.9h2.9c.5 0 .9.4.9.9 0 1 .1 2.1.4 3.1.1.4 0 .9-.3 1.2l-1.8 1.8z"/></svg>
+          <a href="tel:+37258373606">+372 583 736 06</a>
         </div>
+        <div className="footer-item">
+          <svg className="icon-24" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/></svg>
+          <a href="mailto:info@plusreisid.ee">info@plusreisid.ee</a>
+        </div>
+        <div className="footer-item">
+          <svg className="icon-24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 6.1 7 13 7 13s7-6.9 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/></svg>
+          <span>Tallinn, Eesti</span>
+        </div>
+        <div className="footer-item subtle" style={{ background:'transparent', border:'none' }}>© {new Date().getFullYear()} Plusreisid OÜ</div>
       </div>
     </footer>
   )
